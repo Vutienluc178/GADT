@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinh Prompt Bài Học E-Learning Toán</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .input-focus:focus { transform: translateY(-2px); transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-4">🎓 Sinh Prompt Bài Học E-Learning</h1>
+            <p class="text-xl text-blue-100">Tạo bài học Toán học theo chuẩn GDPT 2018</p>
+        </div>
+
+        <!-- Main Form -->
+        <div class="max-w-4xl mx-auto bg-white rounded-2xl card-shadow p-8">
+            <form id="lessonForm" class="space-y-6">
+                <!-- Chủ đề bài học -->
+                <div class="space-y-2">
+                    <label class="block text-lg font-semibold text-gray-700">
+                        📚 Chủ đề bài học <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="topic" 
+                        placeholder="Ví dụ: Mệnh đề toán học, Định lý Pytago, Xác suất có điều kiện..."
+                        class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none input-focus transition-all"
+                        required
+                    >
+                </div>
+
+                <!-- Nguồn kiến thức -->
+                <div class="space-y-2">
+                    <label class="block text-lg font-semibold text-gray-700">
+                        📖 Nguồn kiến thức
+                    </label>
+                    <textarea 
+                        id="knowledge" 
+                        rows="4"
+                        placeholder="Nhập nội dung kiến thức bổ sung, mô tả hình ảnh hoặc nội dung từ file PDF..."
+                        class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none input-focus transition-all resize-none"
+                    ></textarea>
+                </div>
+
+                <!-- Lớp và Thời lượng -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-lg font-semibold text-gray-700">
+                            🎯 Lớp <span class="text-red-500">*</span>
+                        </label>
+                        <select 
+                            id="grade" 
+                            class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none input-focus transition-all"
+                            required
+                        >
+                            <option value="">Chọn lớp</option>
+                            <option value="10">Lớp 10</option>
+                            <option value="11">Lớp 11</option>
+                            <option value="12">Lớp 12</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-lg font-semibold text-gray-700">
+                            ⏰ Thời lượng <span class="text-red-500">*</span>
+                        </label>
+                        <select 
+                            id="duration" 
+                            class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none input-focus transition-all"
+                            required
+                        >
+                            <option value="">Chọn thời lượng</option>
+                            <option value="30 phút">30 phút</option>
+                            <option value="45 phút">45 phút</option>
+                            <option value="1 tiết">1 tiết (50 phút)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Yêu cầu đặc biệt -->
+                <div class="space-y-2">
+                    <label class="block text-lg font-semibold text-gray-700">
+                        ⭐ Yêu cầu đặc biệt (tùy chọn)
+                    </label>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-xl hover:border-blue-300 cursor-pointer transition-all">
+                            <input type="checkbox" id="interactive" class="w-5 h-5 text-blue-600">
+                            <span>🎮 Tăng tính tương tác</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-xl hover:border-blue-300 cursor-pointer transition-all">
+                            <input type="checkbox" id="reallife" class="w-5 h-5 text-blue-600">
+                            <span>🌍 Nhiều ví dụ thực tế</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-xl hover:border-blue-300 cursor-pointer transition-all">
+                            <input type="checkbox" id="visual" class="w-5 h-5 text-blue-600">
+                            <span>🎨 Tăng tính trực quan</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-xl hover:border-blue-300 cursor-pointer transition-all">
+                            <input type="checkbox" id="gamification" class="w-5 h-5 text-blue-600">
+                            <span>🏆 Gamification</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <div class="text-center pt-6">
+                    <button 
+                        type="submit" 
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
+                    >
+                        ✨ Tạo Prompt Bài Học
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Result Section -->
+        <div id="resultSection" class="max-w-4xl mx-auto mt-8 bg-white rounded-2xl card-shadow p-8 hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">📝 Prompt Đã Tạo</h2>
+                <button 
+                    id="copyBtn" 
+                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300 flex items-center space-x-2"
+                >
+                    <span>📋</span>
+                    <span>Sao chép</span>
+                </button>
+            </div>
+            <div id="promptOutput" class="bg-gray-50 p-6 rounded-xl border-2 border-gray-200 font-mono text-sm leading-relaxed whitespace-pre-wrap"></div>
+            
+            <!-- Usage Instructions -->
+            <div class="mt-6 p-4 bg-blue-50 rounded-xl border-l-4 border-blue-500">
+                <h3 class="font-semibold text-blue-800 mb-2">💡 Hướng dẫn sử dụng:</h3>
+                <ul class="text-blue-700 space-y-1 text-sm mb-4">
+                    <li>• Sao chép prompt và dán vào một trong các AI sau</li>
+                    <li>• AI sẽ tạo ra bài học e-learning hoàn chỉnh theo yêu cầu</li>
+                    <li>• Bạn có thể chỉnh sửa và bổ sung thêm theo ý muốn</li>
+                </ul>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <a href="https://chat.openai.com" target="_blank" class="flex items-center justify-center space-x-2 bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition-all text-sm font-medium">
+                        <span>🤖</span>
+                        <span>ChatGPT</span>
+                    </a>
+                    <a href="https://claude.ai" target="_blank" class="flex items-center justify-center space-x-2 bg-orange-500 text-white px-3 py-2 rounded-lg hover:bg-orange-600 transition-all text-sm font-medium">
+                        <span>🧠</span>
+                        <span>Claude</span>
+                    </a>
+                    <a href="https://gemini.google.com" target="_blank" class="flex items-center justify-center space-x-2 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition-all text-sm font-medium">
+                        <span>💎</span>
+                        <span>Gemini</span>
+                    </a>
+                    <a href="https://copilot.microsoft.com" target="_blank" class="flex items-center justify-center space-x-2 bg-purple-500 text-white px-3 py-2 rounded-lg hover:bg-purple-600 transition-all text-sm font-medium">
+                        <span>🚀</span>
+                        <span>Copilot</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('lessonForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const topic = document.getElementById('topic').value;
+            const knowledge = document.getElementById('knowledge').value;
+            const grade = document.getElementById('grade').value;
+            const duration = document.getElementById('duration').value;
+            
+            const interactive = document.getElementById('interactive').checked;
+            const reallife = document.getElementById('reallife').checked;
+            const visual = document.getElementById('visual').checked;
+            const gamification = document.getElementById('gamification').checked;
+            
+            let specialRequests = [];
+            if (interactive) specialRequests.push("Tăng tính tương tác với học sinh");
+            if (reallife) specialRequests.push("Nhiều ví dụ ứng dụng thực tế");
+            if (visual) specialRequests.push("Tăng tính trực quan với hình ảnh, biểu đồ");
+            if (gamification) specialRequests.push("Áp dụng gamification để tạo hứng thú");
+            
+            const prompt = generatePrompt(topic, knowledge, grade, duration, specialRequests);
+            
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('resultSection').classList.remove('hidden');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        function generatePrompt(topic, knowledge, grade, duration, specialRequests) {
+            let prompt = `# BỐI CẢNH VÀ VAI TRÒ
+Bạn là một **giáo viên Toán xuất sắc, chuyên gia e-learning và AI giáo dục với 20 năm kinh nghiệm**.  
+Nhiệm vụ của bạn là **thiết kế một bài học điện tử Toán học** theo chuẩn Chương trình GDPT 2018, trình bày sinh động, dễ hiểu, hấp dẫn học sinh.
+
+---
+
+# THÔNG TIN NHẬP VÀO
+- **Chủ đề bài học:** ${topic}
+- **Lớp:** ${grade}
+- **Thời lượng:** ${duration}`;
+
+            if (knowledge.trim()) {
+                prompt += `
+- **Nguồn kiến thức:** ${knowledge}`;
+            }
+
+            if (specialRequests.length > 0) {
+                prompt += `
+- **Yêu cầu đặc biệt:** ${specialRequests.join(', ')}`;
+            }
+
+            prompt += `
+
+---
+
+# YÊU CẦU ĐẦU RA
+Bài học e-learning phải bao gồm đầy đủ 5 phần:
+
+## 1. 🚀 **Hoạt động khởi động**  
+- Đặt tình huống gắn thực tế → "Vì sao phải học bài này?"  
+- Có câu hỏi khơi gợi hoặc trò chơi ngắn (online/offline).  
+
+## 2. 📚 **Nội dung kiến thức cần nắm**  
+- Tóm tắt kiến thức cốt lõi từ nguồn nhập.  
+- Trình bày bằng **slide ảo**: súc tích (6x6), dùng LaTeX cho công thức.  
+- Có liên hệ thực tế.  
+
+## 3. 💡 **Ví dụ minh họa**  
+- 1–2 ví dụ rõ ràng, có hướng dẫn giải chi tiết.  
+- Tích hợp câu hỏi trắc nghiệm nhanh (AI chấm điểm ngay).  
+
+## 4. 🎯 **Thực hành & Ứng dụng**  
+- Bộ 3–5 bài tập trắc nghiệm/tự luận ngắn.  
+- Bài tập ứng dụng thực tế (thể thao, xây dựng, khoa học, tài chính…).  
+- Có phản hồi tự động: đúng → chúc mừng 🎉, sai → gợi ý bước làm.  
+
+## 5. 📊 **Ghi nhận kết quả**  
+- Xuất báo cáo tiến độ: điểm số, mức độ đạt (Hoàn thành tốt / Đạt / Cần cố gắng).  
+- Gợi ý học tiếp: "Bạn nên luyện thêm dạng …"  
+
+---
+
+# YÊU CẦU ĐẦU RA
+- Trình bày văn bản bằng **Markdown** (phân mục rõ ràng, dễ theo dõi).  
+- Có icon/emoji tạo hứng thú.  
+- **Công thức toán học:** Luôn viết trong dấu \`$...$\`, chỉ hiển thị mã LaTeX, KHÔNG biên dịch công thức.  
+  - Ví dụ: \`$x^2 + y^2 = z^2$\`  
+- Ngôn ngữ sinh động, phù hợp với học sinh THPT.  
+- Bài học gồm: Mở đầu, Kiến thức mới, Ví dụ minh họa, Bài tập, Kết luận.  
+
+👉 Hãy tạo bài học hoàn chỉnh ngay bây giờ.`;
+
+            return prompt;
+        }
+        
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            
+            // Fallback for older browsers
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(promptText).then(function() {
+                    showCopySuccess();
+                }).catch(function() {
+                    fallbackCopy(promptText);
+                });
+            } else {
+                fallbackCopy(promptText);
+            }
+        });
+        
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showCopySuccess();
+            } catch (err) {
+                alert('Không thể sao chép tự động. Vui lòng chọn và sao chép thủ công.');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        function showCopySuccess() {
+            const btn = document.getElementById('copyBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>✅</span><span>Đã sao chép!</span>';
+            btn.classList.remove('bg-green-500', 'hover:bg-green-600');
+            btn.classList.add('bg-green-600');
+            
+            setTimeout(function() {
+                btn.innerHTML = originalText;
+                btn.classList.remove('bg-green-600');
+                btn.classList.add('bg-green-500', 'hover:bg-green-600');
+            }, 2000);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97bda9ab23b96141',t:'MTc1NzMyNjI5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
