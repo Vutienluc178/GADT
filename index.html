@@ -111,13 +111,31 @@
                     </div>
                 </div>
 
-                <!-- Generate Button -->
-                <div class="text-center pt-6">
+                <!-- Generate Buttons -->
+                <div class="grid md:grid-cols-3 gap-4 pt-6">
                     <button 
                         type="submit" 
-                        class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
+                        name="promptType"
+                        value="elearning"
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-4 rounded-xl text-base font-semibold hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
                     >
-                        ✨ Tạo Prompt Bài Học
+                        ✨ E-Learning
+                    </button>
+                    <button 
+                        type="submit" 
+                        name="promptType"
+                        value="ppt"
+                        class="bg-gradient-to-r from-green-600 to-teal-600 text-white px-4 py-4 rounded-xl text-base font-semibold hover:from-green-700 hover:to-teal-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
+                    >
+                        📊 Slide PPT
+                    </button>
+                    <button 
+                        type="submit" 
+                        name="promptType"
+                        value="allinone"
+                        class="bg-gradient-to-r from-orange-600 to-red-600 text-white px-4 py-4 rounded-xl text-base font-semibold hover:from-orange-700 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
+                    >
+                        🚀 All in One
                     </button>
                 </div>
             </form>
@@ -188,7 +206,17 @@
             if (visual) specialRequests.push("Tăng tính trực quan với hình ảnh, biểu đồ");
             if (gamification) specialRequests.push("Áp dụng gamification để tạo hứng thú");
             
-            const prompt = generatePrompt(topic, knowledge, grade, duration, specialRequests);
+            // Determine which button was clicked
+            const promptType = e.submitter.value;
+            let prompt;
+            
+            if (promptType === 'ppt') {
+                prompt = generatePPTPrompt(topic, knowledge, grade, specialRequests);
+            } else if (promptType === 'allinone') {
+                prompt = generateAllInOnePrompt(topic, knowledge, grade, duration, specialRequests);
+            } else {
+                prompt = generatePrompt(topic, knowledge, grade, duration, specialRequests);
+            }
             
             document.getElementById('promptOutput').textContent = prompt;
             document.getElementById('resultSection').classList.remove('hidden');
@@ -261,6 +289,186 @@ Bài học e-learning phải bao gồm đầy đủ 5 phần:
             return prompt;
         }
         
+        function generatePPTPrompt(topic, knowledge, grade, specialRequests) {
+            let prompt = `# ROLE:
+Bạn là giáo viên Toán THPT có 20 năm kinh nghiệm, dạy học tích cực theo phong cách G. Polya, am hiểu bộ sách giáo khoa Toán THPT "Chân trời sáng tạo".
+Nhiệm vụ: Soạn kịch bản bài học cho một chủ đề cụ thể, có ví dụ, bài tập và lời giải chi tiết.
+
+---
+
+# INPUT:
+- **Chủ đề:** ${topic}
+- **Lớp:** ${grade}`;
+
+            if (knowledge.trim()) {
+                prompt += `
+- **Nguồn kiến thức:** ${knowledge}`;
+            }
+
+            prompt += `
+- **Yêu cầu:** Có khởi động thực tế, kiến thức trọng tâm, ví dụ minh họa có lời giải, hoạt động nhóm, bài toán ứng dụng kết thúc có lời giải.`;
+
+            if (specialRequests.length > 0) {
+                prompt += `
+- **Yêu cầu đặc biệt:** ${specialRequests.join(', ')}`;
+            }
+
+            prompt += `
+
+---
+
+# OUTPUT:
+Soạn bài học gồm:
+
+## 1. **🚀 Khởi động gắn thực tế**
+   - Mô tả tình huống đời sống gần gũi.
+   - Câu hỏi gợi mở để học sinh tò mò.
+
+## 2. **🎯 Mục tiêu & Kiến thức trọng tâm**
+   - Các kiến thức HS cần nắm (bullet).
+   - Kỹ năng cần đạt.
+
+## 3. **📚 Hoạt động chính (theo 4 bước Polya)**
+   - Hiểu vấn đề → Lập kế hoạch → Thực hiện → Kiểm tra.
+   - Ví dụ minh họa (có **lời giải chi tiết từng bước**).
+
+## 4. **💡 Bài toán ứng dụng kết thúc**
+   - Bài toán gắn với tình huống khởi động.
+   - Học sinh giải quyết → có **lời giải chi tiết**.
+   - Thông điệp rút ra: Toán gắn thực tiễn.
+
+## 5. **🎯 Mở rộng & Giao nhiệm vụ**
+   - Bài tập vận dụng/thực hành nhóm.
+   - Có **đáp án hoặc hướng dẫn giải**.
+   - Câu hỏi mở để HS suy nghĩ thêm.
+
+---
+
+# STYLE:
+- Ngắn gọn, rõ ràng, phù hợp học sinh THPT.
+- Lời giải trình bày theo từng bước dễ hiểu.
+- Văn phong khích lệ, tích cực.
+
+---
+
+# YÊU CẦU ĐẦU RA
+- Trình bày văn bản bằng **Markdown** (phân mục rõ ràng, dễ theo dõi).
+- Có icon/emoji tạo hứng thú.
+- **Công thức toán học:** Luôn viết trong dấu \`$...$\`, chỉ hiển thị mã LaTeX, KHÔNG biên dịch công thức.
+  - Ví dụ: \`$x^2 + y^2 = z^2$\`
+- Ngôn ngữ sinh động, phù hợp với học sinh THPT.
+
+👉 Hãy soạn bài học hoàn chỉnh ngay bây giờ!`;
+
+            return prompt;
+        }
+        
+        function generateAllInOnePrompt(topic, knowledge, grade, duration, specialRequests) {
+            let prompt = `# ROLE:
+Bạn là giáo viên Toán THPT xuất sắc với 20 năm kinh nghiệm, am hiểu chương trình "Chân trời sáng tạo". 
+Nhiệm vụ: Soạn kịch bản bài học cho một chủ đề Toán, theo 5 phương pháp dạy học hiện đại.
+
+---
+
+# INPUT:
+- **Chủ đề:** ${topic}
+- **Lớp:** ${grade}
+- **Thời lượng:** ${duration}`;
+
+            if (knowledge.trim()) {
+                prompt += `
+- **Nguồn kiến thức:** ${knowledge}`;
+            }
+
+            prompt += `
+- **Yêu cầu:** 
+  + Có khởi động thực tế
+  + Kiến thức trọng tâm
+  + Ví dụ minh họa có lời giải chi tiết
+  + Bài toán ứng dụng cuối bài có lời giải
+  + Hoạt động nhóm
+  + Bài tập vận dụng/mở rộng kèm đáp án hoặc gợi ý`;
+
+            if (specialRequests.length > 0) {
+                prompt += `
+- **Yêu cầu đặc biệt:** ${specialRequests.join(', ')}`;
+            }
+
+            prompt += `
+
+---
+
+# OUTPUT:
+Trình bày kịch bản bài học theo 5 cách:
+
+---
+
+## 1. 🎯 Cách tiếp cận Polya
+- Khởi động: tình huống thực tiễn gắn Toán.
+- Hoạt động chính: theo 4 bước Polya (Hiểu vấn đề → Lập kế hoạch → Thực hiện → Kiểm tra).
+- Ví dụ minh họa có **lời giải chi tiết**.
+- Bài toán ứng dụng kết thúc (có **lời giải**).
+- Phân bổ thời gian: [nêu cụ thể cho 1 tiết hoặc 2 tiết].
+
+---
+
+## 2. 🔍 Cách tiếp cận 5E
+- Engage (Khởi động): tình huống đời sống gần gũi.
+- Explore (Khám phá): học sinh làm thí nghiệm nhỏ, vẽ hình, nhập số liệu.
+- Explain (Giải thích): học sinh trình bày, giáo viên chuẩn hóa.
+- Elaborate (Vận dụng): áp dụng vào bài toán thực tế.
+- Evaluate (Đánh giá): câu hỏi củng cố, giao nhiệm vụ.
+- Phân bổ thời gian: [ghi chi tiết theo từng bước].
+
+---
+
+## 3. 📋 Dạy học Dự án (PBL)
+- Mục tiêu dự án: học sinh giải quyết một vấn đề thực tế liên quan đến chủ đề.
+- Các bước: đặt vấn đề → lập kế hoạch → thực hiện → báo cáo sản phẩm.
+- Sản phẩm yêu cầu: poster, video, mô hình, báo cáo nhóm.
+- Định hướng đánh giá: quá trình + kết quả.
+- Thời lượng: [nêu cách triển khai trong 1–2 tiết].
+
+---
+
+## 4. 🔬 Dạy học STEM/STEAM
+- Kết nối Toán với Khoa học – Công nghệ – Kỹ thuật – Nghệ thuật.
+- Mô tả hoạt động trải nghiệm STEM.
+- Ví dụ ứng dụng: dùng phần mềm GeoGebra, Python, Desmos…
+- Sản phẩm học sinh tạo ra.
+- Phân bổ thời gian: [nêu rõ theo số tiết].
+
+---
+
+## 5. 💻 Dạy học Kiến tạo + Công nghệ số
+- Học sinh tự khám phá quy luật qua ví dụ, sai thử, thảo luận nhóm.
+- Giáo viên chỉ gợi mở, không cho công thức ngay.
+- Tích hợp công cụ số: GeoGebra, Google Sheets, Python, AI.
+- Bài tập mở rộng: tình huống đời sống khác, có hướng dẫn hoặc đáp án.
+- Phân bổ thời gian: [nêu rõ theo số tiết].
+
+---
+
+# STYLE:
+- Ngắn gọn, mạch lạc, rõ ràng.
+- Có ví dụ và bài tập kèm lời giải.
+- Phân bổ thời lượng theo số tiết.
+- Văn phong khích lệ, hiện đại, gần gũi với học sinh.
+
+---
+
+# YÊU CẦU ĐẦU RA
+- Trình bày văn bản bằng **Markdown** (phân mục rõ ràng, dễ theo dõi).
+- Có icon/emoji tạo hứng thú.
+- **Công thức toán học:** Luôn viết trong dấu \`$...$\`, chỉ hiển thị mã LaTeX, KHÔNG biên dịch công thức.
+  - Ví dụ: \`$x^2 + y^2 = z^2$\`
+- Ngôn ngữ sinh động, phù hợp với học sinh THPT.
+
+👉 Hãy soạn bài học hoàn chỉnh ngay bây giờ!`;
+
+            return prompt;
+        }
+        
         document.getElementById('copyBtn').addEventListener('click', function() {
             const promptText = document.getElementById('promptOutput').textContent;
             
@@ -310,5 +518,5 @@ Bài học e-learning phải bao gồm đầy đủ 5 phần:
             }, 2000);
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97bda9ab23b96141',t:'MTc1NzMyNjI5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97bf619f875e5f54',t:'MTc1NzM0NDMxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
